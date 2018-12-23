@@ -171,10 +171,10 @@ function! s:GetLookupFromCompileCommandsFile(compile_commands_file) abort
     let l:dir_lookup = {}
 
     for l:entry in l:raw_data
-        let l:basename = fnamemodify(l:entry.file, ':t')
+        let l:basename = tolower(fnamemodify(l:entry.file, ':t'))
         let l:file_lookup[l:basename] = get(l:file_lookup, l:basename, []) + [l:entry]
 
-        let l:dirbasename = fnamemodify(l:entry.directory, ':p:h:t')
+        let l:dirbasename = tolower(fnamemodify(l:entry.directory, ':p:h:t'))
         let l:dir_lookup[l:dirbasename] = get(l:dir_lookup, l:basename, []) + [l:entry]
     endfor
 
@@ -190,7 +190,7 @@ endfunction
 
 function! ale#c#ParseCompileCommandsFlags(buffer, dir, file_lookup, dir_lookup) abort
     " Search for an exact file match first.
-    let l:basename = expand('#' . a:buffer . ':t')
+    let l:basename = tolower(expand('#' . a:buffer . ':t'))
     let l:file_list = get(a:file_lookup, l:basename, [])
 
     for l:item in l:file_list
@@ -202,7 +202,8 @@ function! ale#c#ParseCompileCommandsFlags(buffer, dir, file_lookup, dir_lookup) 
     " Look for any file in the same directory if we can't find an exact match.
     let l:dir = ale#path#Simplify(expand('#' . a:buffer . ':p:h'))
 
-    let l:dir_list = get(a:dir_lookup, expand('#' . a:buffer . ':p:h:t'), [])
+    let l:dirbasename = tolower(expand('#' . a:buffer . ':p:h:t'))
+    let l:dir_list = get(a:dir_lookup, l:dirbasename, [])
 
     for l:item in l:dir_list
         if ale#path#Simplify(fnamemodify(l:item.file, ':h')) is? l:dir
