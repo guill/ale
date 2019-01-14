@@ -96,6 +96,7 @@ function! ale#c#ParseCFlags(path_prefix, cflag_line) abort
            \ stridx(l:option, '-D') >= 0 ||
            \ stridx(l:option, '-std=') >= 0
             if index(l:cflags_list, l:option) < 0
+                let l:option = substitute(l:option, '"', '\\"', 'g')
                 call add(l:cflags_list, l:option)
             endif
         endif
