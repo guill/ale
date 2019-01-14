@@ -93,7 +93,8 @@ function! ale#c#ParseCFlags(path_prefix, cflag_line) abort
 
         " Parse the cflag
         if stridx(l:option, '-I') >= 0 ||
-           \ stridx(l:option, '-D') >= 0
+           \ stridx(l:option, '-D') >= 0 ||
+           \ stridx(l:option, '-std=') >= 0
             if index(l:cflags_list, l:option) < 0
                 call add(l:cflags_list, l:option)
             endif
