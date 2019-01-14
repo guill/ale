@@ -108,6 +108,12 @@ function! ale#c#ParseCFlags(path_prefix, cflag_line) abort
                 call remove(l:split_lines, l:option_index)
                 call insert(l:split_lines, l:option, l:option_index)
             endif
+        " Escape quotes in #defines
+        " TODO - Is this only for compile_commands?
+        elseif stridx(l:option, '-D') == 0 && stridx(l:option, '"') != -1
+            let l:option = substitute(l:option, '"', '\\"', 'g')
+            call remove(l:split_lines, l:option_index)
+            call insert(l:split_lines, l:option, l:option_index)
         endif
 
         let l:option_index = l:option_index + 1
